@@ -1,10 +1,30 @@
+'use client'
+
 import { sunPosition } from '@/weatherGetter/suncalc';
 import { getWeather } from '@/weatherGetter/weather'
 import { getWaitUntilPromiseFromEvent } from 'next/dist/server/web/spec-extension/fetch-event'
+import { useState, useEffect } from 'react';
 
-export default async function Home() {
-  const now = new Date();
-  const weather = await getWeather() as any;
+export default function Home() {
+  const [now, setTime] = useState(new Date());
+  useEffect(() => {
+    setInterval(() => setTime(new Date()), 1000);
+  }, []);
+
+  const [weather, setWeather] = useState<any>(null);
+  useEffect(() => {
+    const loadWeather = async () => {
+      const weatherData = await getWeather();
+      setInterval(() => setWeather(weatherData), 1000);
+    };
+    
+    loadWeather();
+  }, [])
+
+  /*const [sunPos, setSunPos] = useState<any>(null);
+  useEffect(() => {
+    const load
+  })*/
   const sunPos = sunPosition(now);
   let bgcolor;
 
@@ -34,10 +54,10 @@ export default async function Home() {
       bgcolor = "#69abec"
       break;
     case 'evening0l':
-      bgcolor = "#ffb380"
+      bgcolor = "#f7bd96ff"
       break;
     case 'sunset':
-      bgcolor = "#ecac6cf6"
+      bgcolor = "#f8b776f6"
       break;
     case 'evening0d':
       bgcolor = "#1a2332"
@@ -56,7 +76,7 @@ export default async function Home() {
       minHeight: '100vh',
     }}>
       <div className="main-weather-block">
-        <h1>{Math.round(weather.temperature)}°</h1>
+        <h1>{weather ? Math.round(weather.temperature) + '°' : 'Loading...'}</h1>
         <p>{now.toLocaleTimeString()}</p>
       </div>
     </div>
