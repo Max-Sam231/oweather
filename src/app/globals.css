@@ -36,8 +36,7 @@ body {
   gap: 0;
   line-height: 0;
   margin: 0 auto;
-  width: 20%; /* Настрой под нужный размер */
-  
+  width: 20%;  
 }
 
 .weather-block:hover {
