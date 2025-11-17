@@ -37,7 +37,7 @@ body {
   width: 20%;
 
   text-align: center;
-  padding-top: 5%;
+  padding-top: 3%;
 }
 
 .main-weather-block__weather {
@@ -48,6 +48,16 @@ body {
   font-size: 250%;
 }
 
+.main-weather-block__code {
+  font-size: 500%;
+}
+
+.main-weather-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
 
 .weather-block:hover {
     transform: translateY(-5px); 

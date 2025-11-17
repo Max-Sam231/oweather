@@ -63,8 +63,11 @@ export default function Home() {
       minHeight: '100vh',
     }}>
       <div className="main-weather-block">
-        <h1 className="main-weather-block__weather">{weather ? Math.round(weather) + '°' + " " + weatherIcon: 'Loading...'}</h1>
-        <p className="main-weather-block__time">{now.toLocaleTimeString()}</p>
+        <div className="main-weather-content">
+          <h1 className="main-weather-block__weather">{weather ? Math.round(weather) + '°': 'Loading...'}</h1>
+          <h1 className="main-weather-block__code">{weatherIcon}</h1>
+          </div>
+          <p className="main-weather-block__time">{now.toLocaleTimeString()}</p>
       </div>
     </div>
   )
