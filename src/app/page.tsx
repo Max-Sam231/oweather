@@ -1,7 +1,7 @@
 'use client'
 
 import { sunPosition } from '@/weatherGetter/suncalc';
-import { getTemp, getWeatherCode } from '@/weatherGetter/weather'
+import { getTemp, getWeatherCode, getAppTemperature } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
 
@@ -12,11 +12,26 @@ export default function Home() {
   }, []);
 
   
-  const [weather, setWeather] = useState<any>(null);
+  const [temperature, setTemperature] = useState<any>(null);
   useEffect(() => {
     const loadWeather = async () => {
       const weatherData = await getTemp();
-      setWeather(weatherData);
+      setTemperature(weatherData);
+    };
+    
+    loadWeather();
+
+    const interval = setInterval(loadWeather, 1800000);
+
+    return () => clearInterval(interval)
+  }, [])
+
+
+  const [appTemperature, setAppTemperature] = useState<any>(null);
+  useEffect(() => {
+    const loadWeather = async () => {
+      const weatherData = await getAppTemperature();
+      setAppTemperature(weatherData);
     };
     
     loadWeather();
@@ -54,8 +69,8 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
 
-  let weatherIcon = getWeatherDescription(weatherCode);
-  let bgcolor = getBgColor(sunPos);
+  let bgcolor: string | undefined = getBgColor(sunPos);
+  let weatherIcon = getWeatherDescription(weatherCode, bgcolor);
 
   return (
     <div style={{
@@ -64,9 +79,10 @@ export default function Home() {
     }}>
       <div className="main-weather-block">
         <div className="main-weather-content">
-          <h1 className="main-weather-block__weather">{weather ? Math.round(weather) + '°': 'Loading...'}</h1>
+          <h1 className="main-weather-block__weather">{temperature ? Math.round(temperature) + '°': 'Loading...'}</h1>
           <h1 className="main-weather-block__code">{weatherIcon}</h1>
           </div>
+          <p className="main-weather-block__appTemp">{appTemperature ? 'Ощущается как ' + Math.round(appTemperature) + '°': 'Loading...'}</p>
           <p className="main-weather-block__time">{now.toLocaleTimeString()}</p>
       </div>
     </div>

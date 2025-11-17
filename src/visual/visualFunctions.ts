@@ -1,8 +1,12 @@
-export const getWeatherDescription = (code: number) => {
+export const getWeatherDescription = (code: number, bgcolor: string) => {
+    
+    const bgcolorsNight: string[] = ["#1a1a1a", "#2d3847" , "#3a4a5d" , "#4a5c72", "#1a2332", "#1e1e2d", "#2d2d2d"];
+    const nightFlag = bgcolorsNight.includes(bgcolor);
+    
     const weatherMap: { [key: number]: string } = {
-      0: '☀️',
-      1: '🌤️', 
-      2: '⛅',
+      0: nightFlag ? '🌙' : '☀️',
+      1: nightFlag ? '☁️🌙' : '🌤️', 
+      2: nightFlag ? '🌙☁️' : '⛅',
       3: '☁️',
       45: '🌫️',
       48: '🌫️',
@@ -20,9 +24,9 @@ export const getWeatherDescription = (code: number) => {
       73: '❄️',
       75: '❄️',
       77: '❄️',
-      80: '🌦️',
-      81: '🌦️',
-      82: '🌦️',
+      80: nightFlag ? '🌙🌧️' : '🌦️',
+      81: nightFlag ? '🌙🌧️' : '🌦️',
+      82: nightFlag ? '🌙🌧️' : '🌦️',
       85: '❄️',
       86: '❄️',
       95: '⛈️',
@@ -33,8 +37,8 @@ export const getWeatherDescription = (code: number) => {
     return weatherMap[code] || `Неизвестно (${code})`;
   };
 
-export const getBgColor = (sunPos: string) => {
-    let bgcolor
+export function getBgColor(sunPos: string): string {
+    let bgcolor: string = "";
     switch (sunPos) {
       case 'night':
         bgcolor = "#1a1a1a" 
