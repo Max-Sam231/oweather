@@ -25,8 +25,6 @@ body {
 .main-weather-block {
   color: whitesmoke;
   font-family: 'Manrope', sans-serif;
-  font-size: 550%;
-  text-align: center;
 
   display: flex;   
   flex-direction: column;
@@ -37,7 +35,19 @@ body {
   line-height: 0;
   margin: 0 auto;
   width: 20%;
+
+  text-align: center;
+
 }
+
+.main-weather-block__weather {
+  font-size: 900%;
+}
+
+.main-weather-block__time {
+  font-size: 250%;
+}
+
 
 .weather-block:hover {
     transform: translateY(-5px); 
