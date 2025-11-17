@@ -29,4 +29,3 @@ export function getWeatherCode(): Promise<number | string> {
       return "error";
     })  
   }
-  
