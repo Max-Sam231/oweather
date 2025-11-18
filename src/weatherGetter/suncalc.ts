@@ -34,6 +34,3 @@ export function sunPosition(now: Date) {
         return 'evening2d';
     }
 }
-
-const now = new Date();
-console.log(sunPosition(now));

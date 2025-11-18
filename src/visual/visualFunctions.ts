@@ -3,7 +3,7 @@ export const getWeatherDescription = (code: number, bgcolor: string) => {
     const bgcolorsNight: string[] = ["#1a1a1a", "#2d3847" , "#3a4a5d" , "#4a5c72", "#1a2332", "#1e1e2d", "#2d2d2d"];
     const nightFlag = bgcolorsNight.includes(bgcolor);
     
-    const weatherMap: { [key: number]: string } = {
+    const weatherMapIcons: { [key: number]: string } = {
       0: nightFlag ? '🌙' : '☀️',
       1: nightFlag ? '☁️🌙' : '🌤️', 
       2: nightFlag ? '🌙☁️' : '⛅',
@@ -33,8 +33,39 @@ export const getWeatherDescription = (code: number, bgcolor: string) => {
       96: '⛈️',
       99: '⛈️'
     };
+
+    const weatherMapDescs: { [key: number]: string } = {
+      0: 'Ясно',
+      1: 'Преимущественно ясно', 
+      2: 'Переменная облачность',
+      3: 'Пасмурно',
+      45: 'Туман',
+      48: 'Туман c инеем',
+      51: 'Слабая морось',
+      53: 'Умеренная морось', 
+      55: 'Сильная морось',
+      56: 'Слабая ледяная морось',
+      57: 'Сильная ледяная морось',
+      61: 'Небольшой дождь',
+      63: 'Умеренный дождь',
+      65: 'Ливень',
+      66: 'Слабый ледяной дождь',
+      67: 'Сильный ледяной дождь', 
+      71: 'Слабый снегопад',
+      73: 'Умеренный снегопад',
+      75: 'Сильный снегопад',
+      77: 'Очень мелкий снег',
+      80: 'Кратковременный ливень',
+      81: 'Ливень',
+      82: 'Ливень',
+      85: 'Кратковременные снегопад',
+      86: 'Кратковременные снегопад',
+      95: 'Гроза',
+      96: 'Гроза c небольшим градом',
+      99: 'Гроза c крупным градом'
+    };
     
-    return weatherMap[code] || `Неизвестно (${code})`;
+    return [weatherMapIcons[code] || `Неизвестно (${code})`, weatherMapDescs[code] || `Неизвестно (${code})`];
   };
 
 export function getBgColor(sunPos: string): string {
