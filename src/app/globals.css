@@ -58,7 +58,8 @@ body {
 }
 
 .main-weather-block__appTemp {
-  font-size: 165%;
+  color: rgb(206, 205, 205);
+  font-size: 130%;
   margin: 0;
   line-height: 2;
 }
