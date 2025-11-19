@@ -5,28 +5,28 @@ export const getWeatherDescription = (code: number, bgcolor: string) => {
     
     const weatherMapIcons: { [key: number]: string } = {
       0: nightFlag ? '🌙' : '☀️',
-      1: nightFlag ? '☁️🌙' : '🌤️', 
-      2: nightFlag ? '🌙☁️' : '⛅',
+      1: nightFlag ? '☁️' : '🌤️', 
+      2: nightFlag ? '☁️' : '⛅',
       3: '☁️',
       45: '🌫️',
       48: '🌫️',
       51: '🌧️',
       53: '🌧️', 
       55: '🌧️',
-      56: '🌧️',
-      57: '🌧️',
+      56: '🌧️❄️',
+      57: '🌧️❄️',
       61: '🌧️',
       63: '🌧️',
       65: '🌧️',
-      66: '🌧️',
-      67: '🌧️', 
+      66: '🌧️❄️',
+      67: '🌧️❄️', 
       71: '❄️',
       73: '❄️',
       75: '❄️',
       77: '❄️',
-      80: nightFlag ? '🌙🌧️' : '🌦️',
-      81: nightFlag ? '🌙🌧️' : '🌦️',
-      82: nightFlag ? '🌙🌧️' : '🌦️',
+      80: nightFlag ? '🌧️' : '🌦️',
+      81: nightFlag ? '🌧️' : '🌦️',
+      82: nightFlag ? '🌧️' : '🌦️',
       85: '❄️',
       86: '❄️',
       95: '⛈️',
@@ -99,7 +99,7 @@ export function getBgColor(sunPos: string): string {
         bgcolor = "#f7bd96ff"
         break;
       case 'sunset':
-        bgcolor = "#f8b776f6"
+        bgcolor = "#BA9DCB"
         break;
       case 'evening0d':
         bgcolor = "#1a2332"

@@ -54,10 +54,36 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
   
+  const [allDataLoaded, setAllDataLoaded] = useState(false);
+
+  useEffect(() => {
+    if (weatherInfo && hourlyInfo && sunPos) {
+      setAllDataLoaded(true);
+    }
+  }, [weatherInfo, hourlyInfo, sunPos]);
+
   let bgcolor: string | undefined = getBgColor(sunPos);
   let weatherIcon = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[0] : '⏳';
   let weatherDesc = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[1] : '⏳';
   
+  if (!allDataLoaded) {
+    return (
+      <div style={{ 
+        backgroundColor: bgcolor, 
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'whitesmoke',
+        fontFamily: 'Manrope, sans-serif'
+      }}>
+        <div style={{
+          fontSize: 100,
+        }}>⏳</div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       backgroundColor: bgcolor,
@@ -81,30 +107,67 @@ export default function Home() {
         </div>
       </div>
       <div className='hourly-weather-block'>
-        {now.getHours() + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours()], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours()]) + '° ': '⏳'}
-        {now.getHours() + 1 + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 1], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 1]) + '° ': '⏳'}
-        {now.getHours() + 2 + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 2], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 2]) + '° ': '⏳'}
-        {now.getHours() + 3 + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 3], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 3]) + '° ': '⏳'}
-        {now.getHours() + 4 + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 4], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 4]) + '° ': '⏳'}
-        {now.getHours() + 5 + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 5], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 5]) + '° ': '⏳'}
-        {now.getHours() + 6 + ':00'}
-        {hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 6], bgcolor)[0] : '⏳'}
-        {hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 6]) + '°': '⏳'}
-
+        <div className='hourly-item'>
+          <div className='hourly-time'>{now.getHours() % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours()], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours()]) + '° ': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 1) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 1], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 1]) + '° ': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 2) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 2], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 2]) + '° ': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 3) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 3], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 3]) + '° ': '⏳'}</div>
+        </div>
+        <div className='hourly-item'> 
+          <div className='hourly-time'>{(now.getHours() + 4) % 24 + ':00'}</div> 
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 4], bgcolor)[0] : '⏳'}</div> 
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 4]) + '° ': '⏳'}</div> 
+        </div> 
+        <div className='hourly-item'>  
+          <div className='hourly-time'>{(now.getHours() + 5) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 5], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 5]) + '° ': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 6) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 6], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 6]) + '°': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 7) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 7], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 7]) + '°': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 8) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 8], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 8]) + '°': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 9) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 9], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 9]) + '°': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 10) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 10], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 10]) + '°': '⏳'}</div>
+        </div>
+        <div className='hourly-item'>
+          <div className='hourly-time'>{(now.getHours() + 11) % 24 + ':00'}</div>
+          <div className='hourly-icon'>{hourlyInfo?.weather_code ? getWeatherDescription(hourlyInfo.weather_code[now.getHours() + 11], bgcolor)[0] : '⏳'}</div>
+          <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 11]) + '°': '⏳'}</div>
+        </div>
       </div>
-      
     </div>
     </div>
   )
