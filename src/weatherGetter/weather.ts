@@ -13,6 +13,11 @@ interface WeatherInfo {
   time: string;
 }
 
+interface HourlyInfo {
+  temperature_2m: number;
+  weather_code: number;
+}
+
 export function getWeatherInfo(): Promise<WeatherInfo | string> {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,surface_pressure,wind_speed_10m&windspeed_unit=ms&timezone=Asia%2FOmsk`;
 
@@ -25,8 +30,8 @@ export function getWeatherInfo(): Promise<WeatherInfo | string> {
     })
 }
 
-export function getHourlyTemp(): Promise<any | string> {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m&timezone=Asia%2FOmsk`;
+export function getHourlyInfo(): Promise<HourlyInfo | string> {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code&timezone=Asia%2FOmsk`;
 
   return axios.get(url)
     .then((response: any) => {
