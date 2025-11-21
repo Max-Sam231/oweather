@@ -1,7 +1,7 @@
 'use client'
 
 import { sunPosition } from '@/weatherGetter/suncalc';
-import { getWeatherInfo, getHourlyInfo } from '@/weatherGetter/weather'
+import { getWeatherInfo, getHourlyInfo, getWeeklyInfo } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
 
@@ -27,7 +27,6 @@ export default function Home() {
   }, [])
 
   const [hourlyInfo, setHourlyInfo] = useState<any>(null);
-  
   useEffect(() => {
 
     const loadHourlyInfo = async () => {
@@ -40,6 +39,19 @@ export default function Home() {
 
     return () => clearInterval(interval)
   }, [])
+
+  const [weeklyInfo, setWeeklyInfo] = useState<any>(null);
+  useEffect(() => {
+    const loadWeeklyInfo = async () => {
+      const weeklyWeatherData = await getWeeklyInfo();
+      setWeeklyInfo(weeklyWeatherData);
+    };
+
+    loadWeeklyInfo();
+    const interval = setInterval(loadWeeklyInfo, 1800000);
+
+    return () => clearInterval(interval);
+  })
 
   const [sunPos, setSunPos] = useState<any>(null);
   useEffect(() => {
@@ -60,7 +72,7 @@ export default function Home() {
     if (weatherInfo && hourlyInfo && sunPos) {
       setAllDataLoaded(true);
     }
-  }, [weatherInfo, hourlyInfo, sunPos]);
+  }, [weatherInfo, hourlyInfo, sunPos, weeklyInfo]);
 
   let bgcolor: string | undefined = getBgColor(sunPos);
   let weatherIcon = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[0] : '⏳';
@@ -168,6 +180,19 @@ export default function Home() {
           <div className='hourly-temp'>{hourlyInfo?.temperature_2m ? Math.round(hourlyInfo.temperature_2m[now.getHours() + 11]) + '°': '⏳'}</div>
         </div>
       </div>
+    </div>
+    <div className='weekly-weather-block'>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[0] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[0]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[0]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[0], bgcolor)[0] : '⏳'}</div>
+      </div>
+      <div className='weekly-weather-item'></div>
+      <div className='weekly-weather-item'></div>
+      <div className='weekly-weather-item'></div>
+      <div className='weekly-weather-item'></div>
+      <div className='weekly-weather-item'></div>
+      <div className='weekly-weather-item'></div>
     </div>
     </div>
   )

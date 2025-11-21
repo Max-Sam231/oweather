@@ -156,6 +156,48 @@ body {
   }
 }
 
+.weekly-weather-block {
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    display: flex;
+    width: 100%;
+    height: 270px;
+    margin-top: 40px;
+}
+
+.weekly-weather-item {
+    font-family: 'Manrope', sans-serif;
+    width: 180px;
+    height: 270px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weekly-weather-temp {
+    text-align: center;
+    margin-top: 25px;
+    color: whitesmoke;
+    font-size: 35px;
+}
+
+.weekly-weather-data {
+    margin-top: 7px;
+    text-align: center;
+    color: rgb(206, 205, 205);
+    font-size: 17px;
+}
+
+.weekly-weather-icon {
+    text-align: center;
+    font-size: 70px;
+}
+
 .weather-block:hover {
     transform: translateY(-5px); 
 }
