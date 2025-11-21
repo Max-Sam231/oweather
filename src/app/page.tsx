@@ -187,12 +187,36 @@ export default function Home() {
         <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[0]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[0]) + '°' : '⏳'}</div>
         <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[0], bgcolor)[0] : '⏳'}</div>
       </div>
-      <div className='weekly-weather-item'></div>
-      <div className='weekly-weather-item'></div>
-      <div className='weekly-weather-item'></div>
-      <div className='weekly-weather-item'></div>
-      <div className='weekly-weather-item'></div>
-      <div className='weekly-weather-item'></div>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[1] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[1]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[1]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[1], bgcolor)[0] : '⏳'}</div>
+      </div>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[2] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[2]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[2]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[2], bgcolor)[0] : '⏳'}</div>
+      </div>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[3] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[3]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[3]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[3], bgcolor)[0] : '⏳'}</div>
+      </div>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[4] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[4]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[4]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[4], bgcolor)[0] : '⏳'}</div>
+      </div>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[5] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[5]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[5]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[5], bgcolor)[0] : '⏳'}</div>
+      </div>
+      <div className='weekly-weather-item'>
+        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[6] : '⏳'}</div>
+        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[6]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[6]) + '°' : '⏳'}</div>
+        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[6], bgcolor)[0] : '⏳'}</div>
+      </div>
     </div>
     </div>
   )
