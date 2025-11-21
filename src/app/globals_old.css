@@ -32,10 +32,10 @@ body {
   
   gap: 0;
   margin: 0 auto;
-  width: 400px; /* Фиксированная ширина вместо 20% */
+  width: 20%;
 
   text-align: center;
-  padding-top: 40px; /* Фиксированный отступ вместо 2% */
+  padding-top: 2%;
 
   opacity: 0;
   transform: scale(0.8) translateY(30px);
@@ -44,34 +44,34 @@ body {
 }
 
 .main-weather-block__weather {
-  font-size: 120px; /* Фиксированный размер вместо 1100% */
+  font-size: 1100%;
   margin: 0;
   line-height: 1;
 }
 
 .main-weather-block__time {
   color: rgb(206, 205, 205);
-  font-size: 32px; /* Фиксированный размер вместо 200% */
+  font-size: 200%;
   margin: 0;
   line-height: 1;
 }
 
 .main-weather-block__code-icon {
-  font-size: 80px; /* Фиксированный размер вместо 600% */
+  font-size: 600%;
   margin: 0;
   line-height: 1;
 }
 
 .main-weather-block__code-description {
   color: rgb(206, 205, 205);
-  font-size: 24px; /* Фиксированный размер вместо 170% */
+  font-size: 170%;
   margin: 0;
   line-height: 1;
 }
 
 .main-weather-block__Info {
   color: rgb(206, 205, 205);
-  font-size: 18px; /* Фиксированный размер вместо 130% */
+  font-size: 130%;
   margin: 0;
   line-height: 1.3;
   align-items: left;
@@ -91,18 +91,18 @@ body {
 
 .hourly-weather-block {
   color: whitesmoke;
-  margin-top: 40px; /* Фиксированный отступ вместо 2% */
+  margin-top: 2%;
   font-family: 'Manrope', sans-serif;
   text-align: center;
   display: flex; 
   justify-content: center; 
-  gap: 40px; /* Фиксированный gap вместо 5em */
+  gap: 5em;
   align-items: center;
 }
 
 .hourly-item {
   display: flex;
-  font-size: 24px; /* Фиксированный размер вместо 200% */
+  font-size: 200%;
   align-items: center;
   text-align: center;
   flex-direction: column;
@@ -114,18 +114,18 @@ body {
 }
 
 .hourly-time {
-  font-size: 14px; /* Фиксированный размер вместо 60% */
+  font-size: 60%;
   color: rgb(206, 205, 205);
 }
 
 .hourly-icon {
-  font-size: 20px; /* Фиксированный размер вместо 135% */
+  font-size: 135%;
 }
 
 .hourly-temp {
-  font-size: 16px; /* Фиксированный размер вместо 80% */
+  font-size: 80%;
   font-weight: 600;
-  margin-top: 5px; /* Фиксированный отступ вместо 0.2em */
+  margin-top: 0.2em;
   color: rgb(223, 222, 222);
 }
 
