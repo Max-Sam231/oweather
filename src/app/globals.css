@@ -201,3 +201,8 @@ body {
 .weather-block:hover {
     transform: translateY(-5px); 
 }
+
+#map {
+  pointer-events: auto !important;
+  cursor: crosshair !important;
+}

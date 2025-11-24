@@ -5,6 +5,26 @@ import { getWeatherInfo, getHourlyInfo, getWeeklyInfo } from '@/weatherGetter/we
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
 
+import dynamic from 'next/dynamic';
+import YandexMap from '@/components/yandexmap';
+
+const MapContainer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Marker),
+  { ssr: false }
+);
+const Popup = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Popup),
+  { ssr: false }
+);
+
 export default function Home() {
   const [now, setTime] = useState(new Date());
   useEffect(() => {
@@ -51,7 +71,7 @@ export default function Home() {
     const interval = setInterval(loadWeeklyInfo, 1800000);
 
     return () => clearInterval(interval);
-  })
+  }, [])
 
   const [sunPos, setSunPos] = useState<any>(null);
   useEffect(() => {
@@ -217,6 +237,9 @@ export default function Home() {
         <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[6]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[6]) + '°' : '⏳'}</div>
         <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[6], bgcolor)[0] : '⏳'}</div>
       </div>
+    </div>
+    <div style={{ borderRadius: '20px' }}>
+      <YandexMap bgcolor={bgcolor || '#ffffff'}/>
     </div>
     </div>
   )
