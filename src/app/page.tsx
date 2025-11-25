@@ -1,6 +1,6 @@
 'use client'
 
-import { sunPosition } from '@/weatherGetter/suncalc';
+import { sunPosition, lightDayLenght } from '@/weatherGetter/suncalc';
 import { getWeatherInfo, getHourlyInfo, getWeeklyInfo } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
@@ -241,6 +241,7 @@ export default function Home() {
     <div style={{ borderRadius: '20px' }}>
       <YandexMap bgcolor={bgcolor || '#ffffff'} currentWeatherInfo={weatherInfo}/>
     </div>
+    <div className='main-weather-block'>{lightDayLenght(now)}</div>
     </div>
   )
 }

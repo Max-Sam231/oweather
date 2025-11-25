@@ -1,9 +1,9 @@
 import SunCalc from 'suncalc';
 
-export function sunPosition(now: Date) {    
-    const lat = 54.9924;
-    const lon = 73.3686;
+const lat = 54.9924;
+const lon = 73.3686;
 
+export function sunPosition(now: Date) {    
     const times = SunCalc.getTimes(now, lat, lon);
 
     if (now < times.nightEnd || now >= times.night) {
@@ -33,4 +33,15 @@ export function sunPosition(now: Date) {
     } else {
         return 'evening2d';
     }
+}
+
+export function lightDayLenght(now: Date) {
+    const times = SunCalc.getTimes(now, lat, lon);
+    
+    const dayLengthHours = (times.sunset.getTime() - times.sunrise.getTime()) / (1000 * 60 * 60);
+
+    const hours = Math.floor(dayLengthHours);
+    const minutes = Math.round((dayLengthHours - hours) * 60);
+    
+    return `${hours.toString().padStart(2, '0')} ч ${minutes.toString().padStart(2, '0')} мин`
 }
