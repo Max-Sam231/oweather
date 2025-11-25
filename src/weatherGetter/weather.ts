@@ -3,7 +3,7 @@ const axios = require('axios');
 const lat = 54.9924;
 const lon = 73.3686;
 
-interface WeatherInfo {
+export interface WeatherInfo {
   temperature_2m: number;
   apparent_temperature: number;
   weather_code: number;
@@ -11,6 +11,7 @@ interface WeatherInfo {
   surface_pressure: number;
   wind_speed_10m: number;
   time: string;
+  precipitation: number;
 }
 
 interface HourlyInfo {
@@ -26,7 +27,7 @@ interface WeeklyInfo {
 }
 
 export function getWeatherInfo(): Promise<WeatherInfo | string> {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,surface_pressure,wind_speed_10m&windspeed_unit=ms&timezone=Asia%2FOmsk`;
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,surface_pressure,wind_speed_10m,precipitation&windspeed_unit=ms&timezone=Asia%2FOmsk`;
 
   return axios.get(url)
     .then((response: any) => {
