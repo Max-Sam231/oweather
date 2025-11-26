@@ -1,8 +1,8 @@
 import SunCalc from 'suncalc';
 
-export function sunPosition(now: Date) {    
-    const lat = 54.9924;
-    const lon = 73.3686;
+const lon = 73.3686;
+const lat = 54.9924;
+
 
 export function sunPosition(now: Date): string {    
     const times = SunCalc.getTimes(now, lat, lon);
