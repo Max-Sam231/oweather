@@ -3,7 +3,7 @@ import SunCalc from 'suncalc';
 const lat = 54.9924;
 const lon = 73.3686;
 
-export function sunPosition(now: Date) {    
+export function sunPosition(now: Date): string {    
     const times = SunCalc.getTimes(now, lat, lon);
 
     if (now < times.nightEnd || now >= times.night) {
@@ -35,7 +35,7 @@ export function sunPosition(now: Date) {
     }
 }
 
-export function lightDayLenght(now: Date) {
+export function lightDayLenght(now: Date): string {
     const times = SunCalc.getTimes(now, lat, lon);
     
     const dayLengthHours = (times.sunset.getTime() - times.sunrise.getTime()) / (1000 * 60 * 60);
@@ -44,4 +44,16 @@ export function lightDayLenght(now: Date) {
     const minutes = Math.round((dayLengthHours - hours) * 60);
     
     return `${hours.toString().padStart(2, '0')} ч ${minutes.toString().padStart(2, '0')} мин`
+}
+
+export function sunCycleTimes(now: Date): string[] {
+    const times = SunCalc.getTimes(now, lat, lon);
+    
+    const sunriseHours = times.sunrise.getHours()
+    const sunriseMinutes = times.sunrise.getMinutes()
+
+    const sunsetHours = times.sunset.getHours()
+    const sunsetMinutes = times.sunset.getMinutes()
+
+    return [`${sunriseHours.toString().padStart(2, '0')}:${sunriseMinutes.toString().padStart(2, '0')}`, `${sunsetHours.toString().padStart(2, '0')}:${sunsetMinutes.toString().padStart(2, '0')}`]
 }

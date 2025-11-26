@@ -1,7 +1,7 @@
 'use client'
 
-import { sunPosition, lightDayLenght } from '@/weatherGetter/suncalc';
-import { getWeatherInfo, getHourlyInfo, getWeeklyInfo } from '@/weatherGetter/weather'
+import { sunPosition, lightDayLenght, sunCycleTimes } from '@/weatherGetter/suncalc';
+import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
 
@@ -9,13 +9,8 @@ import YandexMap from '@/components/yandexmap';
 
 
 export default function Home() {
-  const [now, setTime] = useState(new Date());
-  useEffect(() => {
-    setInterval(() => setTime(new Date()), 1000);
-  }, []);
 
-  
-  const [weatherInfo, setWeatherInfo] = useState<any>(null);
+  const [weatherInfo, setWeatherInfo] = useState<any | null>(null);
   useEffect(() => {
     const loadWeather = async () => {
       const weatherData = await getWeatherInfo();
@@ -56,10 +51,15 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [])
 
+  const [now, setTime] = useState(new Date());
+  useEffect(() => {
+    setInterval(() => setTime(getOmskTime()), 1000);
+  }, []);
+
   const [sunPos, setSunPos] = useState<any>(null);
   useEffect(() => {
     const loadSunPos = async () => {
-      const sunPosData = await sunPosition(new Date());
+      const sunPosData = await sunPosition(now);
       setSunPos(sunPosData);
     };
 
@@ -68,9 +68,8 @@ export default function Home() {
 
     return () => clearInterval(interval)
   }, [])
-  
-  const [allDataLoaded, setAllDataLoaded] = useState(false);
 
+  const [allDataLoaded, setAllDataLoaded] = useState(false);
   useEffect(() => {
     if (weatherInfo && hourlyInfo && sunPos) {
       setAllDataLoaded(true);
@@ -221,10 +220,18 @@ export default function Home() {
         <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[6], bgcolor)[0] : '⏳'}</div>
       </div>
     </div>
-    <div style={{ borderRadius: '20px' }}>
-      <YandexMap bgcolor={bgcolor || '#ffffff'} currentWeatherInfo={weatherInfo}/>
+    <div className='info-block'>
+      <div style={{ borderRadius: '20px' }}>
+        <YandexMap bgcolor={bgcolor || '#ffffff'} currentWeatherInfo={weatherInfo}/>
+      </div>
+      <div className="info-block-right">
+        <div className='info-block-item'>
+          <p>🌅{sunCycleTimes(now)[0]}</p>
+          <p>🌇{sunCycleTimes(now)[1]}</p>
+        </div>
+      <div className="info-block-item" style={{ marginLeft: '20px' }}></div>
+      </div>
     </div>
-    <div className='main-weather-block'>{lightDayLenght(now)}</div>
     </div>
   )
 }
