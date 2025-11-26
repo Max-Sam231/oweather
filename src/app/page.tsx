@@ -5,25 +5,8 @@ import { getWeatherInfo, getHourlyInfo, getWeeklyInfo } from '@/weatherGetter/we
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
 
-import dynamic from 'next/dynamic';
 import YandexMap from '@/components/yandexmap';
 
-const MapContainer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.MapContainer),
-  { ssr: false }
-);
-const TileLayer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.TileLayer),
-  { ssr: false }
-);
-const Marker = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Marker),
-  { ssr: false }
-);
-const Popup = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Popup),
-  { ssr: false }
-);
 
 export default function Home() {
   const [now, setTime] = useState(new Date());
