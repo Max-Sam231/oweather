@@ -230,7 +230,7 @@ export default function Home() {
           <p>🌇{sunCycleTimes(now)[1]}</p>
         </div>
       <div className="info-block-item" style={{ marginLeft: '20px' }}></div>
-      </div>
+    </div>
     </div>
     </div>
   )
