@@ -247,11 +247,11 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
       <div 
         ref={mapContainerRef} 
         style={{
-            width: '36%', 
-            height: '450px', 
-            borderRadius: '40px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-            overflow: 'hidden',
+          width: '600px', 
+          height: '450px', 
+          borderRadius: '40px',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          overflow: 'hidden',
         }}
       ></div>
     </div>

@@ -1,9 +1,9 @@
 'use client'
 
 import { sunPosition, lightDayLenght, sunCycleTimes } from '@/weatherGetter/suncalc';
-import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime } from '@/weatherGetter/weather'
+import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime, getMoonPhase } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
-import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
+import { getBgColor, getWeatherDescription, translateMoonPhase } from '@/visual/visualFunctions';
 
 import YandexMap from '@/components/yandexmap';
 
@@ -69,6 +69,18 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
 
+  const [moonPhase, setMoonPhase] = useState<any>(null);
+  useEffect(() => {
+    const loadMoonPhase = async () => {
+      const moonPhaseData = await getMoonPhase();
+      setMoonPhase(moonPhaseData);
+    }
+    loadMoonPhase();
+    const interval = setInterval(loadMoonPhase, 10000);
+
+    return () => clearInterval(interval)
+  }, [])
+  
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   useEffect(() => {
     if (weatherInfo && hourlyInfo && sunPos) {
@@ -79,7 +91,8 @@ export default function Home() {
   let bgcolor: string | undefined = getBgColor(sunPos);
   let weatherIcon = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[0] : '⏳';
   let weatherDesc = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[1] : '⏳';
-  
+  let moonPhaseDesc = moonPhase ? translateMoonPhase(moonPhase) : '⏳';
+
   if (!allDataLoaded) {
     return (
       <div style={{ 
@@ -220,18 +233,20 @@ export default function Home() {
         <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[6], bgcolor)[0] : '⏳'}</div>
       </div>
     </div>
-    <div className='info-block'>
+    <div className="info-block">
       <div style={{ borderRadius: '20px' }}>
         <YandexMap bgcolor={bgcolor || '#ffffff'} currentWeatherInfo={weatherInfo}/>
       </div>
       <div className="info-block-right">
         <div className='info-block-item'>
-          <p>🌅{sunCycleTimes(now)[0]}</p>
-          <p>🌇{sunCycleTimes(now)[1]}</p>
+          <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сегодня</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px' }}>🌅{sunCycleTimes(now)[0]} - рассвет, 🌇{sunCycleTimes(now)[1]} - закат</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px' }}>☀️{lightDayLenght(now)} - длина светового дня</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px' }}>{moonPhaseDesc} - текущая фаза луны</p>
         </div>
-      <div className="info-block-item" style={{ marginLeft: '20px' }}></div>
+        <div className="info-block-item"></div>
+      </div>  
     </div>
-    </div>
-    </div>
+  </div>
   )
 }

@@ -66,3 +66,17 @@ export function getWeeklyInfo(): Promise<WeeklyInfo | string> {
       return 'error';
     })
 }
+
+export function getMoonPhase(): Promise<number | string> {
+  const url = `https://wttr.in/Omsk?format=j1`
+
+  return axios.get(url)
+    .then((response: any) => {
+      const illumStr = response.data.weather[0].astronomy[0].moon_illumination;
+      const phase = parseFloat(illumStr) / 100;
+      return phase;
+    })
+    .catch((error: any) => {
+      return 'error'
+    })
+}
