@@ -13,7 +13,7 @@ export default function Home() {
   const [weatherInfo, setWeatherInfo] = useState<any | null>(null);
   useEffect(() => {
     const loadWeather = async () => {
-      const weatherData = await getWeatherInfo();
+      const weatherData = await getWeatherInfo(54.9924, 73.3686);
       setWeatherInfo(weatherData);
     };
     
