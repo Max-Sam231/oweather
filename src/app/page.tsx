@@ -1,7 +1,7 @@
 'use client'
 
 import { sunPosition, lightDayLenght, sunCycleTimes } from '@/weatherGetter/suncalc';
-import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime, getMoonPhase } from '@/weatherGetter/weather'
+import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime, getMoonPhase, getSunInfo } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription, translateMoonPhase } from '@/visual/visualFunctions';
 
@@ -81,6 +81,18 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
   
+  const [sunRadData, setSunRadData] = useState<any>(null);
+  useEffect(() => {
+    const loadSunRadData = async () => {
+      const sunRadData = await getSunInfo();
+      setSunRadData(sunRadData);
+    }
+    loadSunRadData();
+    const interval = setInterval(loadSunRadData, 10000);
+
+    return () => clearInterval(interval)
+  }, [])
+
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   useEffect(() => {
     if (weatherInfo && hourlyInfo && sunPos) {
@@ -242,9 +254,15 @@ export default function Home() {
           <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сегодня</p>
           <p style={{ marginLeft: '20px', fontSize: '14px' }}>🌅{sunCycleTimes(now)[0]} - рассвет, 🌇{sunCycleTimes(now)[1]} - закат</p>
           <p style={{ marginLeft: '20px', fontSize: '14px' }}>☀️{lightDayLenght(now)} - длина светового дня</p>
-          <p style={{ marginLeft: '20px', fontSize: '14px' }}>{moonPhaseDesc} - текущая фаза луны</p>
+          <p style={{ fontSize: '14px', textAlign: 'center' }}>{moonPhaseDesc}</p>
         </div>
-        <div className="info-block-item"></div>
+        <div className="info-block-item" style={{ background: '#c348d333' }}>
+          <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сейчас</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Облачность: {sunRadData?.hourly?.cloud_cover ? sunRadData.hourly.cloud_cover[now.getHours()] + '%' : '⏳'}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Кратковолновая радиация:  {sunRadData?.hourly?.shortwave_radiation ? sunRadData.hourly.shortwave_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Прямая радиация: {sunRadData?.hourly?.direct_radiation ? sunRadData.hourly.direct_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Рассеянная радиация: {sunRadData?.hourly?.diffuse_radiation ? sunRadData.hourly.diffuse_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
+        </div>
       </div>  
     </div>
   </div>

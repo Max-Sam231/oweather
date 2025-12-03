@@ -80,3 +80,15 @@ export function getMoonPhase(): Promise<number | string> {
       return 'error'
     })
 }
+
+export function getSunInfo(): Promise<number[] | string> {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=shortwave_radiation,direct_radiation,diffuse_radiation,cloud_cover&forecast_days=1&timezone=auto`
+
+   return axios.get(url)
+    .then((response: any) => {
+      return response.data
+    })
+    .catch((error: any) => {
+      return 'error'
+    })
+}
