@@ -13,13 +13,13 @@ export const getWeatherDescription = (code: number, bgcolor: string) => {
       51: '🌧️',
       53: '🌧️', 
       55: '🌧️',
-      56: '🌧️❄️',
-      57: '🌧️❄️',
+      56: '🌨️',
+      57: '🌨️',
       61: '🌧️',
       63: '🌧️',
       65: '🌧️',
-      66: '🌧️❄️',
-      67: '🌧️❄️', 
+      66: '🌨️',
+      67: '🌨️', 
       71: '❄️',
       73: '❄️',
       75: '❄️',
@@ -65,8 +65,8 @@ export const getWeatherDescription = (code: number, bgcolor: string) => {
       99: 'Гроза c крупным градом'
     };
     
-    return [weatherMapIcons[code] || `Неизвестно (${code})`, weatherMapDescs[code] || `Неизвестно (${code})`];
-  };
+  return [weatherMapIcons[code] || `Неизвестно (${code})`, weatherMapDescs[code] || `Неизвестно (${code})`];
+};
 
 export function getBgColor(sunPos: string): string {
     let bgcolor: string = "";
@@ -111,5 +111,33 @@ export function getBgColor(sunPos: string): string {
         bgcolor = "#2d2d2d" 
         break;
     }
-    return bgcolor
+  return bgcolor
+}
+
+export function translateMoonPhase(phase: number): string {
+  if (phase === 1 || phase === 0) {
+    return '🌑 Новолуние'
   }
+  if (phase < 0.25 && phase > 0) {
+    return '🌘 Убывающий серп'
+  }
+  if (phase === 0.25) {
+    return '🌗 Последняя четверть'
+  }
+  if (phase < 0.5 && phase > 0.25) {
+    return '🌖 Убывающая луна'
+  }
+  if (phase === 0.5) {
+    return '🌕 Полнолуние'
+  }
+  if (phase < 0.75 && phase > 0.5) {
+    return '🌔 Растущая луна'
+  }
+  if (phase === 0.75) {
+    return '🌓 Первая четверть'
+  }
+  if (phase < 1 && phase > 0.75) {
+    return '🌒 Растущий серп'
+  }
+  return String(phase)
+}

@@ -3,7 +3,7 @@ const axios = require('axios');
 const lat = 54.9924;
 const lon = 73.3686;
 
-interface WeatherInfo {
+export interface WeatherInfo {
   temperature_2m: number;
   apparent_temperature: number;
   weather_code: number;
@@ -11,6 +11,7 @@ interface WeatherInfo {
   surface_pressure: number;
   wind_speed_10m: number;
   time: string;
+  precipitation: number;
 }
 
 interface HourlyInfo {
@@ -29,8 +30,8 @@ export function getOmskTime(): Date {
   return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Omsk' }));
 }
 
-export function getWeatherInfo(): Promise<WeatherInfo | string> {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,surface_pressure,wind_speed_10m&windspeed_unit=ms&timezone=Asia%2FOmsk`;
+export function getWeatherInfo(lat: number, lon:number): Promise<WeatherInfo | string> {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code,relative_humidity_2m,surface_pressure,wind_speed_10m,precipitation&windspeed_unit=ms&timezone=Asia%2FOmsk`;
 
   return axios.get(url)
     .then((response: any) => {
@@ -63,5 +64,31 @@ export function getWeeklyInfo(): Promise<WeeklyInfo | string> {
     })
     .catch((error: any) => {
       return 'error';
+    })
+}
+
+export function getMoonPhase(): Promise<number | string> {
+  const url = `https://wttr.in/Omsk?format=j1`
+
+  return axios.get(url)
+    .then((response: any) => {
+      const illumStr = response.data.weather[0].astronomy[0].moon_illumination;
+      const phase = parseFloat(illumStr) / 100;
+      return phase;
+    })
+    .catch((error: any) => {
+      return 'error'
+    })
+}
+
+export function getSunInfo(): Promise<number[] | string> {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=shortwave_radiation,direct_radiation,diffuse_radiation,cloud_cover&forecast_days=1&timezone=auto`
+
+   return axios.get(url)
+    .then((response: any) => {
+      return response.data
+    })
+    .catch((error: any) => {
+      return 'error'
     })
 }

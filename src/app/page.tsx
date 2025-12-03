@@ -1,11 +1,12 @@
 'use client'
 
 import { sunPosition, lightDayLenght, sunCycleTimes } from '@/weatherGetter/suncalc';
-import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime } from '@/weatherGetter/weather'
+import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime, getMoonPhase, getSunInfo } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
-import { getBgColor, getWeatherDescription } from '@/visual/visualFunctions';
+import { getBgColor, getWeatherDescription, translateMoonPhase } from '@/visual/visualFunctions';
 
 import YandexMap from '@/components/yandexmap';
+import WeatherEffects from '@/components/WeatherEffects';
 
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
   const [weatherInfo, setWeatherInfo] = useState<any | null>(null);
   useEffect(() => {
     const loadWeather = async () => {
-      const weatherData = await getWeatherInfo();
+      const weatherData = await getWeatherInfo(54.9924, 73.3686);
       setWeatherInfo(weatherData);
     };
     
@@ -69,6 +70,30 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
 
+  const [moonPhase, setMoonPhase] = useState<any>(null);
+  useEffect(() => {
+    const loadMoonPhase = async () => {
+      const moonPhaseData = await getMoonPhase();
+      setMoonPhase(moonPhaseData);
+    }
+    loadMoonPhase();
+    const interval = setInterval(loadMoonPhase, 10000);
+
+    return () => clearInterval(interval)
+  }, [])
+  
+  const [sunRadData, setSunRadData] = useState<any>(null);
+  useEffect(() => {
+    const loadSunRadData = async () => {
+      const sunRadData = await getSunInfo();
+      setSunRadData(sunRadData);
+    }
+    loadSunRadData();
+    const interval = setInterval(loadSunRadData, 10000);
+
+    return () => clearInterval(interval)
+  }, [])
+
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   useEffect(() => {
     if (weatherInfo && hourlyInfo && sunPos) {
@@ -79,7 +104,9 @@ export default function Home() {
   let bgcolor: string | undefined = getBgColor(sunPos);
   let weatherIcon = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[0] : '⏳';
   let weatherDesc = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[1] : '⏳';
-  
+  let moonPhaseDesc = moonPhase ? translateMoonPhase(moonPhase) : '⏳';
+  let weatherCode = weatherInfo?.weather_code;
+
   if (!allDataLoaded) {
     return (
       <div style={{ 
@@ -103,6 +130,7 @@ export default function Home() {
       backgroundColor: bgcolor,
       minHeight: '100vh',
     }}>
+      <WeatherEffects weatherCode={weatherCode} />
     <div>
       <div className="main-weather-block">
         <p className="main-weather-block__time">{now.toLocaleTimeString().slice(0, 5)}</p>
@@ -220,18 +248,26 @@ export default function Home() {
         <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[6], bgcolor)[0] : '⏳'}</div>
       </div>
     </div>
-    <div className='info-block'>
+    <div className="info-block">
       <div style={{ borderRadius: '20px' }}>
         <YandexMap bgcolor={bgcolor || '#ffffff'} currentWeatherInfo={weatherInfo}/>
       </div>
       <div className="info-block-right">
         <div className='info-block-item'>
-          <p>🌅{sunCycleTimes(now)[0]}</p>
-          <p>🌇{sunCycleTimes(now)[1]}</p>
+          <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сегодня</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px' }}>🌅{sunCycleTimes(now)[0]} - рассвет, 🌇{sunCycleTimes(now)[1]} - закат</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px' }}>☀️{lightDayLenght(now)} - длина светового дня</p>
+          <p style={{ fontSize: '14px', textAlign: 'center' }}>{moonPhaseDesc}</p>
         </div>
-      <div className="info-block-item" style={{ marginLeft: '20px' }}></div>
-      </div>
+        <div className="info-block-item" style={{ background: '#c348d333' }}>
+          <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сейчас</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Облачность: {sunRadData?.hourly?.cloud_cover ? sunRadData.hourly.cloud_cover[now.getHours()] + '%' : '⏳'}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Кратковолновая радиация:  {sunRadData?.hourly?.shortwave_radiation ? sunRadData.hourly.shortwave_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Прямая радиация: {sunRadData?.hourly?.direct_radiation ? sunRadData.hourly.direct_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Рассеянная радиация: {sunRadData?.hourly?.diffuse_radiation ? sunRadData.hourly.diffuse_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
+        </div>
+      </div>  
     </div>
-    </div>
+  </div>
   )
 }
