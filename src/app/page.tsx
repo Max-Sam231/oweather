@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { getBgColor, getWeatherDescription, translateMoonPhase } from '@/visual/visualFunctions';
 
 import YandexMap from '@/components/yandexmap';
+import WeatherEffects from '@/components/WeatherEffects';
 
 
 export default function Home() {
@@ -104,6 +105,7 @@ export default function Home() {
   let weatherIcon = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[0] : '⏳';
   let weatherDesc = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[1] : '⏳';
   let moonPhaseDesc = moonPhase ? translateMoonPhase(moonPhase) : '⏳';
+  let weatherCode = weatherInfo?.weather_code;
 
   if (!allDataLoaded) {
     return (
@@ -128,6 +130,7 @@ export default function Home() {
       backgroundColor: bgcolor,
       minHeight: '100vh',
     }}>
+      <WeatherEffects weatherCode={weatherCode} />
     <div>
       <div className="main-weather-block">
         <p className="main-weather-block__time">{now.toLocaleTimeString().slice(0, 5)}</p>
