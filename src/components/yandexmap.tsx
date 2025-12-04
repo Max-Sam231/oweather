@@ -103,16 +103,20 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
 
       let fillColor = "rgba(128,128,128,0.3)";
       let strokeColor = "rgba(128,128,128,0.6)";
+      let icon;
 
       if (cell.type === "rain") {
         fillColor = "rgba(0,100,255,0.35)";
         strokeColor = "rgba(0,100,255,0.6)";
+        icon = '🌧️';
       } else if (cell.type === "snow") {
         fillColor = "rgba(255,255,255,0.4)";
         strokeColor = "rgba(255,255,255,0.6)";
+        icon = '❄️';
       } else if (cell.type === "cloudy") {
         fillColor = "rgba(160,160,160,0.25)";
         strokeColor = "rgba(160,160,160,0.55)";
+        icon = '☁️';
       }
 
       const rectCoords = [
@@ -139,6 +143,26 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
 
       map.geoObjects.add(polygon);
       precObjects.current.push(polygon);
+    
+      if (icon) {
+      const placemark = new window.ymaps.Placemark(
+        cell.center,
+        {
+          iconContent: icon,
+        },
+        {
+          preset: "islands#icon",
+          iconColor: "#000000",
+          iconLayout: "default#imageWithContent",
+          iconImageSize: [0, 0],
+          iconContentOffset: [0, 0],
+          hasBalloon: false,
+        }
+      );
+
+      map.geoObjects.add(placemark);
+      precObjects.current.push(placemark);
+      }  
     });
   };
 
