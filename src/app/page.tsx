@@ -101,6 +101,17 @@ export default function Home() {
     }
   }, [weatherInfo, hourlyInfo, sunPos, weeklyInfo]);
 
+  const [weekOffset, setWeekOffset] = useState(0);
+  const visible_days = 7;
+  const maxOffset = weeklyInfo ? weeklyInfo.time.length - visible_days : 0;
+  const nextWeek = () => {
+    setWeekOffset(o => Math.min(o + visible_days, maxOffset));
+  };
+
+  const prevWeek = () => {
+    setWeekOffset(o => Math.max(o - visible_days, 0));
+  };
+
   let bgcolor: string | undefined = getBgColor(sunPos);
   let weatherIcon = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[0] : '⏳';
   let weatherDesc = weatherInfo ? getWeatherDescription(weatherInfo.weather_code, bgcolor)[1] : '⏳';
@@ -211,42 +222,28 @@ export default function Home() {
         </div>
       </div>
     </div>
-    <div className='weekly-weather-block'>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[0] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[0]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[0]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[0], bgcolor)[0] : '⏳'}</div>
+    <div className="weekly-weather-wrapper">
+      <button className="weekly-arrow" onClick={prevWeek} disabled={weekOffset === 0}>
+        {'<'}
+      </button>
+      <div className="weekly-weather-block">
+        {weeklyInfo?.time?.slice(weekOffset, weekOffset + visible_days).map((day: string, i: number) => (
+          <div className="weekly-weather-item" key={i}>
+            <div className="weekly-weather-data">{day}</div>
+            <div className="weekly-weather-temp">
+              {Math.round(weeklyInfo.temperature_2m_min[weekOffset + i])}° /
+              {Math.round(weeklyInfo.temperature_2m_max[weekOffset + i])}°
+            </div>
+            <div className="weekly-weather-icon">
+              {getWeatherDescription(weeklyInfo.weathercode[weekOffset + i], bgcolor)[0]}
+            </div>
+          </div>
+        ))}
       </div>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[1] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[1]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[1]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[1], bgcolor)[0] : '⏳'}</div>
-      </div>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[2] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[2]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[2]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[2], bgcolor)[0] : '⏳'}</div>
-      </div>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[3] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[3]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[3]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[3], bgcolor)[0] : '⏳'}</div>
-      </div>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[4] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[4]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[4]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[4], bgcolor)[0] : '⏳'}</div>
-      </div>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[5] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[5]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[5]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[5], bgcolor)[0] : '⏳'}</div>
-      </div>
-      <div className='weekly-weather-item'>
-        <div className='weekly-weather-data'>{weeklyInfo?.time ? weeklyInfo.time[6] : '⏳'}</div>
-        <div className='weekly-weather-temp'>{weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_min[6]) + '°' : '⏳'} / {weeklyInfo?.temperature_2m_max ? Math.round(weeklyInfo.temperature_2m_max[6]) + '°' : '⏳'}</div>
-        <div className='weekly-weather-icon'>{weeklyInfo?.weathercode ? getWeatherDescription(weeklyInfo.weathercode[6], bgcolor)[0] : '⏳'}</div>
-      </div>
+        <button
+          className="weekly-arrow" onClick={nextWeek} disabled={weekOffset >= maxOffset}>
+          {'>'}
+        </button>
     </div>
     <div className="info-block">
       <div style={{ borderRadius: '20px' }}>
@@ -254,13 +251,13 @@ export default function Home() {
       </div>
       <div className="info-block-right">
         <div className='info-block-item'>
-          <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сегодня</p>
+          <p style={{ textAlign: 'center', color: '#dbd8d8', fontSize: '18px' }}>Сегодня</p>
           <p style={{ marginLeft: '20px', fontSize: '14px' }}>🌅{sunCycleTimes(now)[0]} - рассвет, 🌇{sunCycleTimes(now)[1]} - закат</p>
           <p style={{ marginLeft: '20px', fontSize: '14px' }}>☀️{lightDayLenght(now)} - длина светового дня</p>
           <p style={{ fontSize: '14px', textAlign: 'center' }}>{moonPhaseDesc}</p>
         </div>
         <div className="info-block-item" style={{ background: '#c348d333' }}>
-          <p style={{ textAlign: 'center', color: '#cecdcdff', fontSize: '18px' }}>Сейчас</p>
+          <p style={{ textAlign: 'center', color: '#dbd8d8', fontSize: '18px' }}>Сейчас</p>
           <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Облачность: {sunRadData?.hourly?.cloud_cover ? sunRadData.hourly.cloud_cover[now.getHours()] + '%' : '⏳'}</p>
           <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Кратковолновая радиация:  {sunRadData?.hourly?.shortwave_radiation ? sunRadData.hourly.shortwave_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
           <p style={{ marginLeft: '20px', fontSize: '14px', lineHeight: '0.8' }}>Прямая радиация: {sunRadData?.hourly?.direct_radiation ? sunRadData.hourly.direct_radiation[now.getHours()] + ' W/m²' : '⏳'}</p>
