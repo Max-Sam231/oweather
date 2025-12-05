@@ -174,7 +174,7 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
 
   useEffect(() => {
     if (!mapRef.current) return;
-    const interval = setInterval(updateGrid, 600000);
+    const interval = setInterval(updateGrid, 10000);
     return () => clearInterval(interval);
   }, [mapRef.current]);
 

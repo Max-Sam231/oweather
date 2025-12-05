@@ -3,7 +3,7 @@
 import { sunPosition, lightDayLenght, sunCycleTimes } from '@/weatherGetter/suncalc';
 import { getWeatherInfo, getHourlyInfo, getWeeklyInfo, getOmskTime, getMoonPhase, getSunInfo } from '@/weatherGetter/weather'
 import { useState, useEffect } from 'react';
-import { getBgColor, getWeatherDescription, translateMoonPhase } from '@/visual/visualFunctions';
+import { getBgColor, getDayNameByNumber, getWeatherDescription, translateMoonPhase } from '@/visual/visualFunctions';
 
 import YandexMap from '@/components/yandexmap';
 import WeatherEffects from '@/components/WeatherEffects';
@@ -236,6 +236,9 @@ export default function Home() {
             </div>
             <div className="weekly-weather-icon">
               {getWeatherDescription(weeklyInfo.weathercode[weekOffset + i], bgcolor)[0]}
+            </div>
+            <div className="weekly-weather-data">
+              {getDayNameByNumber(weeklyInfo.time[i])}
             </div>
           </div>
         ))}

@@ -141,3 +141,8 @@ export function translateMoonPhase(phase: number): string {
   }
   return String(phase)
 }
+
+export function getDayNameByNumber(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('ru-RU', { weekday: 'long' });
+}
