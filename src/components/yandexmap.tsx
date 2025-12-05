@@ -15,15 +15,16 @@ interface YandexMapProps {
   currentWeatherInfo?: WeatherInfo | null;
 }
 
-export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProps) {
+export default function YandexMap({ bgcolor }: YandexMapProps) {
   const mapInitialized = useRef(false);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const precObjects = useRef<any>([]);
+  const weatherCache = useRef<Record<string, { data: any; timestamp: number }>>({});
 
   const omRegionBounds: [[number, number], [number, number]] = [
-    [53.5, 72.0], 
-    [57.5, 75.5], 
+    [53.5, 72.0],
+    [57.5, 75.5],
   ];
 
   const clearPrecs = () => {
@@ -37,10 +38,10 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
     const [[south, west], [north, east]] = bounds;
     const latDistance = 111;
     const centerLat = (south + north) / 2;
-    const lonDistance = 111 * Math.cos((centerLat * Math.PI) / 180); 
+    const lonDistance = 111 * Math.cos((centerLat * Math.PI) / 180);
 
     const latStep = Math.sqrt(squareKm) / latDistance;
-    const lonStep = Math.sqrt(squareKm) / lonDistance; 
+    const lonStep = Math.sqrt(squareKm) / lonDistance;
 
     const rows = Math.ceil((north - south) / latStep);
     const cols = Math.ceil((east - west) / lonStep);
@@ -58,7 +59,10 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
             [cellSouth, cellWest],
             [cellNorth, cellEast],
           ],
-          center: [cellSouth + (cellNorth - cellSouth) / 2, cellWest + (cellEast - cellWest) / 2],
+          center: [
+            cellSouth + (cellNorth - cellSouth) / 2,
+            cellWest + (cellEast - cellWest) / 2,
+          ],
         });
       }
     }
@@ -77,54 +81,85 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
     return "none";
   };
 
+  const fetchWeatherCached = async (lat: number, lon: number) => {
+    const key = `${lat.toFixed(3)}:${lon.toFixed(3)}`;
+    const now = Date.now();
+    const cached = weatherCache.current[key];
+
+    if (cached && now - cached.timestamp < 15 * 60 * 1000) {
+      return cached.data;
+    }
+
+    const result = await getWeatherInfo(lat, lon);
+    weatherCache.current[key] = { data: result, timestamp: now };
+    return result;
+  };
+
+  const promiseQueue = async <T,>(items: T[], worker: (v: T) => Promise<any>, limit = 8) => {
+    const results: any[] = [];
+    let i = 0;
+
+    async function run() {
+      while (i < items.length) {
+        const current = i++;
+        results[current] = await worker(items[current]);
+      }
+    }
+
+    const workers = Array.from({ length: limit }, run);
+    await Promise.all(workers);
+    return results;
+  };
+
   const fetchGridWeather = async () => {
     const grid = generateGrid(omRegionBounds, 2500);
 
-    const promises = grid.map(async (cell) => {
-      try {
-        const weather = await getWeatherInfo(cell.center[0], cell.center[1]);
-        const type =
-          weather && typeof weather === "object"
-            ? detectWeatherType(weather.weather_code)
-            : "none";
-        return { ...cell, type };
-      } catch {
-        return { ...cell, type: "none" };
-      }
-    });
+    const results = await promiseQueue(
+      grid,
+      async (cell) => {
+        try {
+          const weather = await fetchWeatherCached(cell.center[0], cell.center[1]);
+          const type =
+            weather && typeof weather === "object"
+              ? detectWeatherType(weather.weather_code)
+              : "none";
+          return { ...cell, type };
+        } catch {
+          return { ...cell, type: "none" };
+        }
+      },
+      8
+    );
 
-    return await Promise.all(promises);
+    return results;
   };
 
   const drawGrid = (map: any, grid: any[]) => {
     clearPrecs();
+
     grid.forEach((cell) => {
       if (!cell.type || cell.type === "none") return;
 
       let fillColor = "rgba(128,128,128,0.3)";
-      let strokeColor = "rgba(128,128,128,0.6)";
-      let icon;
+      let icon = null;
 
       if (cell.type === "rain") {
         fillColor = "rgba(0,100,255,0.35)";
-        strokeColor = "rgba(0,100,255,0.6)";
-        icon = '🌧️';
+        icon = "🌧️";
       } else if (cell.type === "snow") {
         fillColor = "rgba(255,255,255,0.4)";
-        strokeColor = "rgba(255,255,255,0.6)";
-        icon = '❄️';
+        icon = "❄️";
       } else if (cell.type === "cloudy") {
         fillColor = "rgba(160,160,160,0.25)";
-        strokeColor = "rgba(160,160,160,0.55)";
-        icon = '☁️';
+        icon = "☁️";
       }
 
       const rectCoords = [
-        [cell.bounds[0][0], cell.bounds[0][1]], 
-        [cell.bounds[1][0], cell.bounds[0][1]], 
-        [cell.bounds[1][0], cell.bounds[1][1]], 
-        [cell.bounds[0][0], cell.bounds[1][1]], 
-        [cell.bounds[0][0], cell.bounds[0][1]], 
+        [cell.bounds[0][0], cell.bounds[0][1]],
+        [cell.bounds[1][0], cell.bounds[0][1]],
+        [cell.bounds[1][0], cell.bounds[1][1]],
+        [cell.bounds[0][0], cell.bounds[1][1]],
+        [cell.bounds[0][0], cell.bounds[0][1]],
       ];
 
       const polygon = new window.ymaps.Polygon(
@@ -132,7 +167,6 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
         {},
         {
           fillColor,
-          strokeColor,
           strokeWidth: 0,
           opacity: 0.8,
           interactiveZIndex: false,
@@ -143,26 +177,22 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
 
       map.geoObjects.add(polygon);
       precObjects.current.push(polygon);
-    
-      if (icon) {
-      const placemark = new window.ymaps.Placemark(
-        cell.center,
-        {
-          iconContent: icon,
-        },
-        {
-          preset: "islands#icon",
-          iconColor: "#000000",
-          iconLayout: "default#imageWithContent",
-          iconImageSize: [0, 0],
-          iconContentOffset: [0, 0],
-          hasBalloon: false,
-        }
-      );
 
-      map.geoObjects.add(placemark);
-      precObjects.current.push(placemark);
-      }  
+      if (icon) {
+        const placemark = new window.ymaps.Placemark(
+          cell.center,
+          { iconContent: icon },
+          {
+            iconLayout: "default#imageWithContent",
+            iconImageSize: [0, 0],
+            iconContentOffset: [0, 0],
+            hasBalloon: false,
+          }
+        );
+
+        map.geoObjects.add(placemark);
+        precObjects.current.push(placemark);
+      }
     });
   };
 
@@ -174,14 +204,14 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
 
   useEffect(() => {
     if (!mapRef.current) return;
-    const interval = setInterval(updateGrid, 10000);
+    const interval = setInterval(updateGrid, 600000);
     return () => clearInterval(interval);
   }, [mapRef.current]);
 
   useEffect(() => {
     if (mapInitialized.current) return;
 
-    const loadYandexMap = () => {
+    const loadMap = () => {
       if (window.ymaps) {
         initMap();
         return;
@@ -216,14 +246,12 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
                 zoom: 7,
                 controls: [],
               },
-              {
-                restrictMapArea: omRegionBounds,
-              }
+              { restrictMapArea: omRegionBounds }
             );
 
             mapRef.current = map;
 
-            const bgNight = [
+            const darkColors = [
               "#1a1a1a",
               "#2d3847",
               "#3a4a5d",
@@ -232,7 +260,7 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
               "#1e1e2d",
               "#2d2d2d",
             ];
-            const theme = bgNight.includes(bgcolor || "#ffffff") ? "dark" : "light";
+            const theme = darkColors.includes(bgcolor || "#ffffff") ? "dark" : "light";
 
             map.layers.add(
               new window.ymaps.Layer(
@@ -243,13 +271,13 @@ export default function YandexMap({ bgcolor, currentWeatherInfo }: YandexMapProp
             updateGrid();
             mapInitialized.current = true;
           } catch (e) {
-            console.error("error", e);
+            console.error(e);
           }
         });
       }
     };
 
-    loadYandexMap();
+    loadMap();
   }, [bgcolor]);
 
   return (

@@ -77,7 +77,7 @@ export function getMoonPhase(): Promise<number | string> {
       return phase;
     })
     .catch((error: any) => {
-      return 'error'
+      return '⏳'
     })
 }
 

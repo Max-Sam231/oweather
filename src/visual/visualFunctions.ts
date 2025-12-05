@@ -116,7 +116,7 @@ export function getBgColor(sunPos: string): string {
 
 export function translateMoonPhase(phase: number): string {
   if (phase === 1 || phase === 0) {
-    return '🌑 Новолуние'
+    return '🌕 Полнолуние'
   }
   if (phase < 0.25 && phase > 0) {
     return '🌘 Убывающий серп'
@@ -128,7 +128,7 @@ export function translateMoonPhase(phase: number): string {
     return '🌖 Убывающая луна'
   }
   if (phase === 0.5) {
-    return '🌕 Полнолуние'
+    return '🌑 Новолуние'
   }
   if (phase < 0.75 && phase > 0.5) {
     return '🌔 Растущая луна'
