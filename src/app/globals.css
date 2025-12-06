@@ -276,3 +276,126 @@ body {
   width: 450px;
   height: 450px;
 }
+
+@media (max-width: 768px) {
+  .weekly-weather-wrapper {
+    padding: 0;
+    gap: 10px;
+  }
+
+  .weekly-arrow {
+    display: none !important;
+  }
+
+  .weekly-weather-block {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    gap: 12px;
+    height: auto;
+    padding-bottom: 10px;
+  }
+
+  .weekly-weather-item {
+    min-width: 130px;
+    height: 190px;
+  }
+
+  .weekly-weather-temp {
+    font-size: 26px;
+  }
+
+  .weekly-weather-icon {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .hourly-weather-block {
+    display: flex;
+    overflow-x: auto;   
+    gap: 15px;             
+    padding: 10px;     
+    justify-content: flex-start; 
+    scroll-snap-type: x mandatory; 
+  }
+
+  .hourly-item {
+    min-width: 60px;       
+    flex: 0 0 auto;        
+    scroll-snap-align: start; 
+  }
+}
+
+@media (max-width: 768px) {
+
+  .weekly-weather-wrapper {
+    padding: 0;
+    gap: 10px;
+  }
+
+  .weekly-weather-block {
+    display: flex;
+    overflow-x: auto;          
+    gap: 12px;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
+    justify-content: flex-start;
+    width: auto;               
+  }
+
+  .weekly-weather-item {
+    min-width: 130px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .weekly-arrow {
+    display: none;           
+  }
+}
+
+@media (max-width: 768px) {
+
+  .info-block {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  #map {
+    width: 90vw;
+    height: 300px;
+  }
+
+  .info-block-right {
+    width: 100%;
+    align-items: center;
+  }
+
+  .info-block-item {
+    width: 90vw;
+    margin-left: 0;
+    height: auto;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .yandex-map-container {
+    width: 90vw !important;
+    height: 300px !important;
+    margin: 0 auto !important;
+    border-radius: 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-weather-block {
+    width: 90vw;           
+    padding-top: 20px;     
+  }
+
+  
+}

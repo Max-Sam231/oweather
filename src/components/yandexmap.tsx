@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { getWeatherInfo, WeatherInfo } from "@/weatherGetter/weather";
 
+
 const apiKey = process.env.NEXT_PUBLIC_MAPS_API_KEY;
 
 declare global {
@@ -286,7 +287,6 @@ export default function YandexMap({ bgcolor }: YandexMapProps) {
         display: "flex",
         justifyContent: "left",
         marginTop: "20px",
-        marginLeft: "210px",
         padding: "20px",
         flexDirection: "column",
         alignItems: "left",
@@ -294,7 +294,9 @@ export default function YandexMap({ bgcolor }: YandexMapProps) {
     >
       <div
         ref={mapContainerRef}
+        className="yandex-map-container"
         style={{
+          marginLeft: "210px",
           width: "600px",
           height: "450px",
           borderRadius: "40px",

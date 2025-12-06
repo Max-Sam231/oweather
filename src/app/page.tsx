@@ -10,6 +10,7 @@ import WeatherEffects from '@/components/WeatherEffects';
 
 
 export default function Home() {
+  const isMobile = typeof window !== "undefined" ? window.innerWidth <= 768 : false;
 
   const [weatherInfo, setWeatherInfo] = useState<any | null>(null);
   useEffect(() => {
@@ -77,7 +78,7 @@ export default function Home() {
       setMoonPhase(moonPhaseData);
     }
     loadMoonPhase();
-    const interval = setInterval(loadMoonPhase, 10000);
+    const interval = setInterval(loadMoonPhase, 6000000);
 
     return () => clearInterval(interval)
   }, [])
@@ -227,7 +228,7 @@ export default function Home() {
         {'<'}
       </button>
       <div className="weekly-weather-block">
-        {weeklyInfo?.time?.slice(weekOffset, weekOffset + visible_days).map((day: string, i: number) => (
+        {weeklyInfo?.time?.slice(isMobile ? 0 : weekOffset, isMobile ? weeklyInfo.time.length : weekOffset + visible_days).map((day: string, i: number) => (
           <div className="weekly-weather-item" key={i}>
             <div className="weekly-weather-data">{day}</div>
             <div className="weekly-weather-temp">
@@ -257,7 +258,7 @@ export default function Home() {
           <p style={{ textAlign: 'center', color: '#dbd8d8', fontSize: '18px' }}>Сегодня</p>
           <p style={{ marginLeft: '20px', fontSize: '14px' }}>🌅{sunCycleTimes(now)[0]} - рассвет, 🌇{sunCycleTimes(now)[1]} - закат</p>
           <p style={{ marginLeft: '20px', fontSize: '14px' }}>☀️{lightDayLenght(now)} - длина светового дня</p>
-          <p style={{ fontSize: '14px', textAlign: 'center' }}>{moonPhaseDesc}</p>
+          <p style={{ marginLeft: '20px', fontSize: '14px' }}>{moonPhaseDesc}</p>
         </div>
         <div className="info-block-item" style={{ background: '#c348d333' }}>
           <p style={{ textAlign: 'center', color: '#dbd8d8', fontSize: '18px' }}>Сейчас</p>
